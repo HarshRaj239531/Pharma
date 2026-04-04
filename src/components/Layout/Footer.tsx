@@ -1,0 +1,148 @@
+"use client";
+import React, { useState } from "react";
+
+const links = {
+    Platform: [
+        { label: "AI Builder", href: "/features/ai-builder" },
+        { label: "Inventory", href: "/features/inventory" },
+        { label: "Billing & GST", href: "/features/billing" },
+        { label: "Analytics", href: "/features/analytics" },
+        { label: "Customer CRM", href: "/features/crm" },
+        { label: "Product Updates", href: "/updates" },
+    ],
+    "Use Cases": [
+        { label: "Retail Stores", href: "#" },
+        { label: "Restaurants", href: "#" },
+        { label: "Wholesalers", href: "#" },
+        { label: "E-commerce", href: "#" },
+        { label: "Startups", href: "#" },
+        { label: "Enterprise", href: "/enterprise" },
+    ],
+    Resources: [
+        { label: "Documentation", href: "/docs" },
+        { label: "Blog", href: "/blog" },
+        { label: "Webinars", href: "#" },
+        { label: "Case Studies", href: "#" },
+        { label: "Community", href: "#" },
+        { label: "Changelog", href: "/changelogs" },
+    ],
+    Company: [
+        { label: "About Us", href: "#" },
+        { label: "Careers", href: "#" },
+        { label: "Contact Sales", href: "/demo" },
+        { label: "Privacy Policy", href: "#" },
+        { label: "Terms of Service", href: "#" },
+        { label: "Security", href: "#" },
+    ],
+};
+
+const socials = [
+    { label: "Twitter", href: "#", d: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" },
+    { label: "LinkedIn", href: "#", d: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" },
+    { label: "GitHub", href: "#", d: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" },
+];
+
+export default function Footer() {
+    const [email, setEmail] = useState("");
+    const [done, setDone] = useState(false);
+
+    return (
+        <footer className="bg-gray-950 text-gray-400">
+            {/* Newsletter */}
+            <div className="border-b border-gray-800">
+                <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-5">
+                    <div className="text-center md:text-left">
+                        <h3 className="text-white font-semibold mb-1">Stay in the loop</h3>
+                        <p className="text-sm text-gray-400">Get product updates, tips, and insights — straight to your inbox.</p>
+                    </div>
+                    {done ? (
+                        <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            You&apos;re subscribed!
+                        </div>
+                    ) : (
+                        <form onSubmit={e => { e.preventDefault(); if (email) setDone(true); }} className="flex gap-2 w-full md:w-auto">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder="your@email.com"
+                                required
+                                className="flex-1 md:w-56 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+                            />
+                            <button type="submit" className="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors shrink-0">
+                                Subscribe
+                            </button>
+                        </form>
+                    )}
+                </div>
+            </div>
+
+            {/* Main links */}
+            <div className="max-w-6xl mx-auto px-6 py-14">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+                    {/* Brand */}
+                    <div className="col-span-2">
+                        <a href="/" className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+                            </div>
+                            <span className="text-white font-bold text-lg">buildformula</span>
+                        </a>
+                        <p className="text-sm leading-relaxed text-gray-400 mb-5 max-w-xs">
+                            The all-in-one business management platform for modern Indian businesses. Manage smarter, grow faster.
+                        </p>
+                        <div className="flex gap-2 mb-5">
+                            {socials.map(s => (
+                                <a key={s.label} href={s.href} aria-label={s.label}
+                                    className="w-8 h-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d={s.d} /></svg>
+                                </a>
+                            ))}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-800 border border-gray-700 text-xs text-gray-300">
+                                <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                SOC 2 Type II
+                            </div>
+                            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-800 border border-gray-700 text-xs text-gray-300">
+                                <svg className="w-3 h-3 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                256-bit SSL
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Link columns */}
+                    {Object.entries(links).map(([group, items]) => (
+                        <div key={group}>
+                            <h4 className="text-white font-semibold text-sm mb-4">{group}</h4>
+                            <ul className="space-y-2.5">
+                                {items.map(item => (
+                                    <li key={item.label}>
+                                        <a href={item.href} className="text-sm text-gray-400 hover:text-white transition-colors duration-150">
+                                            {item.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Bottom bar */}
+            <div className="border-t border-gray-800">
+                <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p className="text-xs text-gray-500">
+                        © {new Date().getFullYear()} BuildFormula Technologies Pvt. Ltd. All rights reserved.
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4">
+                        {["Privacy Policy", "Terms of Service", "Cookie Preferences"].map(l => (
+                            <a key={l} href="#" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">{l}</a>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+}
