@@ -61,7 +61,7 @@ export function Navbar() {
 
                     <div className="flex items-center gap-2">
                         <Layers size={28} color="blue" />
-                        <span className="text-[1.1rem] font-bold text-blue-900">buildformula</span>
+                        <span className="text-[1.1rem] font-bold text-blue-900">Pharamcy</span>
                     </div>
 
                     <div className="hidden md:flex items-center gap-1 text-blue-700 font-semibold absolute left-1/2 -translate-x-1/2">
