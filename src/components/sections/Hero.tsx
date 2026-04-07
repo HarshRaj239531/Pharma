@@ -1,162 +1,435 @@
 "use client";
-import React from "react";
+import {
+    ArrowRight, Layers, MenuIcon, XIcon, Zap, Shield, Globe,
+    ChevronDown, ArrowUpRight, Play, TrendingUp, AlertCircle, Sparkles,
+    Box, Activity, Command, Search, CommandIcon, Lock, Users, Cpu, Code2, LineChart,
+    Database, Fingerprint
+} from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
-export default function Hero() {
+// --- 🌐 Advanced Global Mouse Tracker & Fluid Cursor ---
+function MouseTracker({ children }) {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [smoothPos, setSmoothPos] = useState({ x: 0, y: 0 });
+    const [isHovering, setIsHovering] = useState(false);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            setMousePos({ x: e.clientX, y: e.clientY });
+            const target = e.target;
+            setIsHovering(!!(target.closest('button') || target.closest('a') || target.closest('.interactive-hover')));
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    // Smooth trailing effect for the glowing blob
+    useEffect(() => {
+        let animationFrameId;
+        const updateSmoothPos = () => {
+            setSmoothPos((prev) => ({
+                x: prev.x + (mousePos.x - prev.x) * 0.1,
+                y: prev.y + (mousePos.y - prev.y) * 0.1,
+            }));
+            animationFrameId = requestAnimationFrame(updateSmoothPos);
+        };
+        updateSmoothPos();
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [mousePos]);
+
     return (
-        <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-white to-blue-50">
-
-            {/* ── Background gradient mesh ───────────────────────────── */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-
-                {/* Base gradient (soft bluish + white blend) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-white to-blue-200" />
-
-                {/* Top glow */}
-                <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-blue-300/40 blur-[140px] rounded-full" />
-
-                {/* Left soft blob */}
-                <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-blue-200/40 blur-[120px] rounded-full" />
-
-                {/* Right purple-ish blue tint (premium look) */}
-                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-200/30 blur-[120px] rounded-full" />
-
-                {/* Center subtle highlight */}
-                <div className="absolute top-1/2 left-1/2 w-[600px] h-[400px] -translate-x-1/2 -translate-y-1/2 bg-blue-100/40 blur-[100px] rounded-full" />
-
-                {/* Floating bubbles */}
-                <div className="absolute inset-0 overflow-hidden">
-
-                    {/* Bubble 1 */}
-                    <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400/40 rounded-full blur-xl animate-floatSlow" />
-
-                    {/* Bubble 2 */}
-                    <div className="absolute top-1/3 right-20 w-24 h-24 bg-indigo-400/40 rounded-full blur-xl animate-float" />
-
-                    {/* Bubble 3 */}
-                    <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-blue-300/30 rounded-full blur-3xl animate-floatSlow" />
-
-                    {/* Bubble 4 */}
-                    <div className="absolute bottom-10 right-1/3 w-28 h-28 bg-blue-300/20 rounded-full blur-lg animate-float" />
-
-                    {/* Gradient bubble */}
-                    <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-300/50 to-indigo-300/40 rounded-full blur-xl animate-floatSlow mix-blend-multiply" />
-
-                    {/* Bubble 5 (center soft) */}
-                    <div className="absolute top-1/2 left-1/2 w-52 h-52 -translate-x-1/2 -translate-y-1/2 bg-blue-100/30 rounded-full blur-3xl animate-floatSlow" />
-
-                </div>
-
-                {/* Grid overlay (very subtle) */}
-                <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#3b82f6" strokeWidth="1" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
+        <div
+            className="relative w-full min-h-screen bg-[#f4f7fb] overflow-x-hidden selection:bg-blue-200 selection:text-blue-900"
+            style={{ '--mouse-x': `${mousePos.x}px`, '--mouse-y': `${mousePos.y}px` }}
+        >
+            {/* Dynamic Background Grid that reveals on mouse hover */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
+                <div
+                    className="absolute inset-0 bg-[linear-gradient(to_right,#3b82f6_1px,transparent_1px),linear-gradient(to_bottom,#3b82f6_1px,transparent_1px)] bg-[size:4rem_4rem] transition-opacity duration-300"
+                    style={{
+                        maskImage: `radial-gradient(400px circle at ${smoothPos.x}px ${smoothPos.y}px, black, transparent)`,
+                        WebkitMaskImage: `radial-gradient(400px circle at ${smoothPos.x}px ${smoothPos.y}px, black, transparent)`,
+                        opacity: 0.4
+                    }}
+                />
             </div>
 
-            {/* ── Main content ───────────────────────────────────────── */}
-            <div className="relative z-10 flex flex-col items-center text-center pt-28 pb-16 px-6">
+            {/* Huge Soft Trailing Blob */}
+            <div
+                className="fixed top-0 left-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none z-0 mix-blend-multiply transform -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                style={{ transform: `translate3d(${smoothPos.x}px, ${smoothPos.y}px, 0) translate(-50%, -50%)` }}
+            />
 
-                {/* Badge */}
-                <a href="/updates" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-sm font-medium text-blue-700 mb-8 hover:bg-blue-100 transition-colors duration-200 animate-fade-in">
-                    <span className="flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-blue-500 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
-                    </span>
-                    Smart Pharmacy Management Made Simple,
-                    🚀 Trusted by 100+ Pharmacy Owners
-                    <span className="font-semibold text-blue-600 flex items-center gap-1">
-                        Learn more
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                    </span>
-                </a>
+            {/* Precision Custom Cursor */}
+            <div
+                className="fixed top-0 left-0 z-[9999] pointer-events-none hidden lg:flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                style={{ transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0) translate(-50%, -50%)` }}
+            >
+                <div className={`border transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full flex items-center justify-center
+                    ${isHovering ? 'w-16 h-16 bg-blue-500/10 backdrop-blur-[2px] border-blue-400/50' : 'w-6 h-6 border-blue-500/50'}`}>
+                    <div className={`w-1.5 h-1.5 bg-blue-600 rounded-full transition-all duration-300 ${isHovering ? 'opacity-0 scale-0' : 'opacity-100 scale-100'}`} />
+                </div>
+            </div>
 
-                {/* Heading */}
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.06] tracking-tight mb-6 max-w-4xl animate-fade-in-up">
-                    The fastest tool to{" "}
-                    <span className="relative">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">
-                            manage
+            {children}
+        </div>
+    );
+}
+
+// --- 🧲 Advanced Magnetic Element ---
+function Magnetic({ children, strength = 15, damping = 0.2 }) {
+    const ref = useRef(null);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    const handleMouse = useCallback((e) => {
+        if (!ref.current) return;
+        const { clientX, clientY } = e;
+        const { height, width, left, top } = ref.current.getBoundingClientRect();
+        const middleX = clientX - (left + width / 2);
+        const middleY = clientY - (top + height / 2);
+        setPosition({ x: middleX * (strength / 100), y: middleY * (strength / 100) });
+    }, [strength]);
+
+    const reset = useCallback(() => setPosition({ x: 0, y: 0 }), []);
+
+    return React.cloneElement(children, {
+        ref,
+        onMouseMove: handleMouse,
+        onMouseLeave: reset,
+        style: {
+            transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+            transition: `transform ${damping}s cubic-bezier(0.16, 1, 0.3, 1)`,
+            willChange: "transform"
+        }
+    });
+}
+
+// --- ✨ Advanced Liquid Spotlight Button ---
+const LiquidButton = React.forwardRef(({ children, className, onClick, ...props }, ref) => {
+    return (
+        <button
+            ref={ref}
+            onClick={onClick}
+            className={`relative overflow-hidden group active:scale-95 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${className || ''}`}
+            {...props}
+        >
+            <div className="absolute inset-0 bg-[linear-gradient(110deg,transparent_25%,rgba(255,255,255,0.3)_50%,transparent_75%)] bg-[length:200%_100%] -translate-x-full group-hover:animate-[sweep_1.5s_ease-in-out_infinite] z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-blue-600 group-hover:bg-blue-500 transition-colors duration-500 z-0" />
+            <div className="relative z-20 flex items-center justify-center w-full h-full">
+                {children}
+            </div>
+        </button>
+    );
+});
+LiquidButton.displayName = 'LiquidButton';
+
+// --- 🌐 Floating Glass Navbar ---
+function Navbar() {
+    const [scrolled, setScrolled] = useState(false);
+    const navLinksRef = useRef(null);
+    const [hoverIndicator, setHoverIndicator] = useState({ opacity: 0, left: 0, width: 0 });
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 40);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    const handleNavHover = (e) => {
+        if (!navLinksRef.current) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const parentRect = navLinksRef.current.getBoundingClientRect();
+        setHoverIndicator({ opacity: 1, left: rect.left - parentRect.left, width: rect.width });
+    };
+
+    return (
+        <header className={`fixed inset-x-0 top-0 z-[100] flex justify-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled ? 'pt-4' : 'pt-8'}`}>
+            <nav className={`flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden
+                ${scrolled ? "w-[90%] md:w-[75%] max-w-5xl h-[64px] bg-white/70 backdrop-blur-3xl border border-white/80 shadow-[0_20px_40px_-15px_rgba(37,99,235,0.1),inset_0_1px_0_rgba(255,255,255,1)] rounded-full px-4"
+                    : "w-full max-w-7xl h-[70px] bg-transparent border-transparent px-8"}`}>
+
+                {/* Logo */}
+                <div className="flex items-center z-20">
+                    <Magnetic strength={10}>
+                        <a href="#" className="flex items-center gap-3 interactive-hover group">
+                            <div className="relative flex items-center justify-center w-10 h-10 rounded-[14px] bg-gradient-to-br from-blue-600 to-blue-700 shadow-[0_8px_16px_rgba(37,99,235,0.3)] group-hover:scale-105 group-hover:-rotate-6 transition-all duration-500 overflow-hidden">
+                                <Layers className="w-5 h-5 text-white relative z-10" />
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.4),transparent)]" />
+                            </div>
+                            <span className="font-black tracking-[-0.03em] text-slate-900 text-xl hidden sm:block">BuildFormula</span>
+                        </a>
+                    </Magnetic>
+                </div>
+
+                {/* Desktop Links */}
+                <div ref={navLinksRef} onMouseLeave={() => setHoverIndicator(p => ({ ...p, opacity: 0 }))} className="hidden lg:flex items-center justify-center gap-2 px-2 py-1.5 bg-slate-200/40 backdrop-blur-md rounded-full border border-white/50 shadow-inner relative">
+                    <div className="absolute h-[36px] bg-white rounded-full shadow-sm border border-slate-200/50 pointer-events-none transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
+                        style={{ opacity: hoverIndicator.opacity, left: hoverIndicator.left, width: hoverIndicator.width, transform: `translateY(-50%)`, top: '50%' }} />
+
+                    {["Platform", "Solutions", "Customers", "Pricing"].map((item, idx) => (
+                        <a key={idx} onMouseEnter={handleNavHover} className="relative z-10 px-5 py-2 font-bold text-slate-600 hover:text-blue-700 transition-all duration-300 text-[14px] interactive-hover tracking-tight rounded-full">
+                            {item}
+                        </a>
+                    ))}
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-5 z-20">
+                    <a href="#" className="hidden md:block font-bold text-slate-500 hover:text-slate-900 transition-colors duration-200 text-[14px] interactive-hover">Sign in</a>
+                    <Magnetic strength={15}>
+                        <LiquidButton className="h-11 px-7 rounded-full text-white font-bold text-[14px] shadow-[0_10px_20px_-5px_rgba(37,99,235,0.4)] border border-blue-500/50">
+                            <span className="flex items-center gap-2">Book Demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-400 ease-out" /></span>
+                        </LiquidButton>
+                    </Magnetic>
+                </div>
+            </nav>
+        </header>
+    );
+}
+
+// --- 🍱 Advanced Bento Card ---
+function BentoCard({ title, desc, icon, colSpan = 1, rowSpan = 1, featured = false, delay = '0s', children }) {
+    const cardRef = useRef(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e) => {
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+
+    return (
+        <div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            className={`group relative rounded-[2.5rem] p-8 overflow-hidden transition-all duration-500 border hover:border-blue-300 interactive-hover animate-fade-in-up fill-mode-both
+            ${colSpan === 2 ? 'md:col-span-2' : 'col-span-1'}
+            ${rowSpan === 2 ? 'md:row-span-2 min-h-[400px]' : 'min-h-[260px]'}
+            ${featured ? 'bg-white shadow-[0_20px_40px_-15px_rgba(37,99,235,0.1)] border-blue-100' : 'bg-white/60 backdrop-blur-xl shadow-sm border-slate-200/60 hover:shadow-[0_10px_30px_-10px_rgba(37,99,235,0.1)]'}`}
+            style={{ animationDelay: delay }}
+        >
+            {/* Dynamic Hover Glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0"
+                style={{ background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(37,99,235,0.06), transparent 100%)` }} />
+
+            <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center justify-between mb-8">
+                    <div className={`p-4 rounded-2xl shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3 ${featured ? 'bg-blue-50 border border-blue-100 text-blue-600' : 'bg-white border border-slate-100 text-slate-700'}`}>
+                        {icon}
+                    </div>
+                    {featured && <ArrowUpRight className="w-6 h-6 text-slate-300 group-hover:text-blue-500 transition-colors" />}
+                </div>
+
+                <div className="mt-auto relative z-20">
+                    <h3 className={`text-2xl font-black tracking-tight mb-2 ${featured ? 'text-slate-900' : 'text-slate-800'}`}>{title}</h3>
+                    <p className="text-slate-500 font-medium leading-relaxed max-w-[90%]">{desc}</p>
+                </div>
+            </div>
+
+            {/* Custom Visual Elements Passed as Children */}
+            {children}
+        </div>
+    );
+}
+
+const carouselImages = [
+    "/home.png",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000",
+    "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=1000"
+];
+
+// --- 🚀 ULTRA-PRO HERO & DASHBOARD ---
+export function Hero() {
+    const [tilt, setTilt] = useState({ x: 0, y: 0 });
+    const [parallax, setParallax] = useState({ x: 0, y: 0 });
+    const [activeImage, setActiveImage] = useState(carouselImages[0]);
+    const imageRef = useRef(null);
+
+    const handleImageMouseMove = useCallback((e) => {
+        if (!imageRef.current) return;
+        requestAnimationFrame(() => {
+            const rect = imageRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const tiltX = ((y / rect.height) - 0.5) * -10;
+            const tiltY = ((x / rect.width) - 0.5) * 10;
+            setTilt({ x: tiltX, y: tiltY });
+
+            setParallax({ x: ((x / rect.width) - 0.5) * 40, y: ((y / rect.height) - 0.5) * 40 });
+        });
+    }, []);
+
+    const handleImageMouseLeave = () => {
+        setTilt({ x: 0, y: 0 });
+        setParallax({ x: 0, y: 0 });
+    };
+
+    return (
+        <main className="w-full pt-44 pb-20 px-4 sm:px-6">
+
+            {/* Global CSS Animations */}
+            <style>{`
+                @keyframes sweep { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+                @keyframes text-shine { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+                .animate-text-shine { background-size: 200% auto; animation: text-shine 6s linear infinite; }
+                
+                @keyframes fade-in-up { 
+                    from { opacity: 0; transform: translateY(30px); filter: blur(8px); } 
+                    to { opacity: 1; transform: translateY(0); filter: blur(0); } 
+                }
+                .animate-fade-in-up { animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+                .fill-mode-both { animation-fill-mode: both; }
+
+                /* Scrolling Marquee */
+                @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 2rem)); } }
+                .animate-marquee { animation: marquee 40s linear infinite; }
+            `}</style>
+
+            {/* ── Typography Section ── */}
+            <div className="relative z-10 flex flex-col items-center text-center max-w-6xl mx-auto">
+
+                <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-xl border border-blue-100 shadow-[0_2px_10px_rgba(37,99,235,0.08)] text-sm font-bold text-blue-900 mb-10 animate-fade-in-up fill-mode-both interactive-hover cursor-pointer group">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white shadow-inner">
+                        <Sparkles className="w-3.5 h-3.5" />
+                    </span>
+                    Introducing BuildFormula V2.0
+                    <ArrowRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 group-hover:text-blue-600 transition-transform" />
+                </div>
+
+                <h1 className="text-[4rem] md:text-[6.5rem] lg:text-[7.5rem] font-black text-slate-900 leading-[0.9] tracking-[-0.04em] mb-8 max-w-[1050px] animate-fade-in-up fill-mode-both" style={{ animationDelay: '0.1s' }}>
+                    The modern standard for <br className="hidden md:block" />
+                    <span className="relative inline-block mt-2 px-2">
+                        <span className="relative bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_auto] text-transparent bg-clip-text animate-text-shine drop-shadow-sm">
+                            pharmacy
                         </span>
+                        <svg className="absolute w-[110%] h-6 -bottom-2 -left-4 text-blue-300/40" viewBox="0 0 100 20" preserveAspectRatio="none">
+                            <path d="M0,10 Q50,25 100,10" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                        </svg>
                     </span>
-                    {" "}your pharmacy
+                    management.
                 </h1>
 
-                {/* Subtitle */}
-                <p className="text-xl text-gray-500 max-w-2xl mb-10 leading-relaxed animate-fade-in-up delay-100">
-                    BuildFormula turns operations into clear signals — Manage medicines, billing, expiry alerts, GST, and inventory — all in one powerful pharmacy system.
+                <p className="text-lg md:text-[22px] text-slate-500 max-w-2xl mx-auto mb-14 font-medium leading-[1.6] tracking-tight animate-fade-in-up fill-mode-both" style={{ animationDelay: '0.2s' }}>
+                    Bring billing, inventory, reporting, and team collaboration into one <b className="text-slate-800 font-bold">blazing-fast interface.</b> Built for scale.
                 </p>
 
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row items-center gap-3 mb-16 animate-fade-in-up delay-200">
-                    <a
-                        href="/signup"
-                        id="hero-get-started"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition-all duration-200"
-                    >
-                        Start Free Trial
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-                    </a>
-                    <a
-                        href="/demo"
-                        id="hero-book-demo"
-                        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-semibold text-gray-700 bg-white border border-gray-200 shadow-sm hover:border-blue-300 hover:text-blue-600 hover:-translate-y-0.5 transition-all duration-200"
-                    >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        Watch Pharmacy Demo
-                    </a>
-                </div>
-
-                {/* Social proof */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 mb-16 text-sm text-gray-500 animate-fade-in-up delay-300">
-                    <div className="flex -space-x-2">
-                        {["#3b82f6", "#2563eb", "#1d4ed8", "#60a5fa", "#93c5fd"].map((color, i) => (
-                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-sm"
-                                style={{ background: `linear-gradient(135deg, ${color}, ${color}cc)` }}>
-                                {["R", "P", "A", "S", "M"][i]}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map(i => (
-                            <svg key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                        ))}
-                        <span className="ml-1 font-semibold text-gray-700">4.9/5</span>
-                        <span className="ml-1">from 2,400+ reviews</span>
-                    </div>
-                    <span className="hidden sm:block text-gray-300">·</span>
-                    <span>No credit card required</span>
+                <div className="flex flex-col sm:flex-row items-center gap-5 animate-fade-in-up fill-mode-both" style={{ animationDelay: '0.3s' }}>
+                    <Magnetic strength={15}>
+                        <LiquidButton className="h-16 px-10 rounded-full text-white font-bold text-[17px] shadow-[0_15px_30px_-5px_rgba(37,99,235,0.4)] border border-blue-500/50 group">
+                            <span className="flex items-center gap-3">
+                                Start Building Free
+                                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white transition-colors">
+                                    <ArrowRight className="w-4 h-4 text-white group-hover:text-blue-600 transition-colors" />
+                                </span>
+                            </span>
+                        </LiquidButton>
+                    </Magnetic>
+                    <Magnetic strength={10}>
+                        <button className="h-16 px-10 rounded-full bg-white/60 backdrop-blur-2xl text-slate-800 font-bold text-[17px] flex items-center gap-3 border border-slate-200/80 shadow-[0_8px_20px_-5px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,1)] hover:bg-white hover:border-blue-200 hover:shadow-[0_15px_30px_-10px_rgba(37,99,235,0.15)] transition-all duration-500 interactive-hover group">
+                            <span className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors border border-blue-100">
+                                <Play className="w-4 h-4 fill-blue-600 text-blue-600 ml-0.5" />
+                            </span>
+                            Watch Keynote
+                        </button>
+                    </Magnetic>
                 </div>
             </div>
 
-            {/* ── Dashboard Mockup ──────────────────────────────────── */}
-            <div className="relative z-10 max-w-5xl mx-auto px-6 pb-0 animate-fade-in-up delay-500">
-                <div className="rounded-2xl overflow-hidden shadow-2xl shadow-blue-900/15 border border-gray-200/80 bg-white">
 
-                    <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-100">
-                        <div className="w-3 h-3 rounded-full bg-red-400" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                        <div className="w-3 h-3 rounded-full bg-green-400" />
-                        <div className="mx-auto flex items-center gap-2 px-4 py-1 rounded-md bg-white border border-gray-200 text-xs text-gray-400 w-64">
-                            app.buildformula.com
+
+            {/* ── 3D Interactive Dashboard ── */}
+            <div className="relative z-20 mt-20 max-w-[1250px] mx-auto animate-fade-in-up fill-mode-both" style={{ animationDelay: '0.5s', perspective: "2500px" }}>
+
+                <div
+                    ref={imageRef}
+                    onMouseMove={handleImageMouseMove}
+                    onMouseLeave={handleImageMouseLeave}
+                    className="relative w-full will-change-transform z-10"
+                    style={{
+                        transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.02, 1.02, 1.02)`,
+                        transition: "transform 0.15s cubic-bezier(0.16, 1, 0.3, 1)",
+                        transformStyle: "preserve-3d"
+                    }}
+                >
+                    {/* Dashboard Drop Shadow */}
+                    <div
+                        className="absolute -bottom-20 left-12 right-12 h-32 bg-blue-900/20 blur-[50px] rounded-[100%] transition-transform duration-150 -z-10"
+                        style={{ transform: `translate3d(${tilt.y * -3}px, ${tilt.x * 3}px, -150px)` }}
+                    />
+
+                    {/* Left Parallax Widget */}
+                    <div className="absolute -left-12 top-32 z-50 p-4 rounded-3xl bg-white/90 backdrop-blur-3xl border border-white shadow-[0_20px_40px_-10px_rgba(37,99,235,0.15)] hidden lg:flex items-center gap-4 pointer-events-none"
+                        style={{ transform: `translate3d(${parallax.x}px, ${parallax.y}px, 100px)`, transition: 'transform 0.1s linear' }}>
+                        <div className="p-3.5 bg-blue-50 text-blue-600 rounded-2xl"><LineChart className="w-6 h-6" /></div>
+                        <div>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Live Traffic</p>
+                            <p className="text-2xl font-black text-slate-900 tracking-tight">14.2k <span className="text-sm text-emerald-500 font-bold">req/s</span></p>
                         </div>
                     </div>
 
-                    <img src="/home.png" alt="Pharmacy Dashboard" className="w-full h-full object-cover" />
+                    {/* Hardware Frame */}
+                    <div className="relative p-2.5 rounded-[2.5rem] bg-white/40 backdrop-blur-3xl shadow-[0_40px_80px_-20px_rgba(37,99,235,0.2),inset_0_1px_0_rgba(255,255,255,1)] border border-white/80">
+                        <div className="relative rounded-[2rem] bg-slate-900 shadow-inner overflow-hidden ring-1 ring-slate-900/10 flex flex-col group/mockup">
+
+                            {/* Browser Header */}
+                            <div className="flex items-center justify-between px-5 py-3.5 bg-[#1e1e1e] border-b border-white/5 relative z-20 shrink-0">
+                                <div className="flex items-center gap-2 w-1/3">
+                                    <div className="w-3.5 h-3.5 rounded-full bg-[#ff5f56]" />
+                                    <div className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e]" />
+                                    <div className="w-3.5 h-3.5 rounded-full bg-[#27c93f]" />
+                                </div>
+                                <div className="flex items-center justify-center px-4 py-1.5 rounded-md bg-[#000] border border-white/10 text-xs font-medium text-slate-400 w-1/3">
+                                    <Lock className="w-3 h-3 text-slate-500 mr-2" /> buildformula.com
+                                </div>
+                                <div className="w-1/3 flex justify-end text-slate-500"><MenuIcon className="w-4 h-4" /></div>
+                            </div>
+
+                            {/* Screen Viewport */}
+                            <div className="relative aspect-[16/10] lg:aspect-[16/9] bg-[#0a0a0a] overflow-hidden w-full h-full">
+                                <img
+                                    src={activeImage}
+                                    alt="Interface"
+                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/mockup:scale-[1.02]"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Floating Image Dock */}
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-50">
+                            <div className="p-3 rounded-[2rem] bg-white/60 backdrop-blur-3xl border border-white shadow-[0_20px_40px_-10px_rgba(0,0,0,0.2)] flex items-center gap-4">
+                                {carouselImages.map((imgSrc, index) => {
+                                    const isActive = activeImage === imgSrc;
+                                    return (
+                                        <div key={index} onClick={() => setActiveImage(imgSrc)} className="relative group/dock cursor-pointer interactive-hover">
+                                            <div className={`overflow-hidden rounded-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] origin-bottom
+                                                ${isActive ? 'w-[120px] h-[80px] shadow-[0_20px_40px_rgba(37,99,235,0.3)] ring-4 ring-blue-500 scale-110 -translate-y-4'
+                                                    : 'w-[90px] h-[60px] ring-1 ring-slate-900/10 hover:w-[100px] hover:h-[70px] hover:-translate-y-2 hover:shadow-xl'}`}>
+                                                <img src={imgSrc} className="w-full h-full object-cover" alt="thumbnail" />
+                                                <div className={`absolute inset-0 bg-slate-900/40 transition-opacity ${isActive ? 'opacity-0' : 'opacity-100 group-hover/dock:opacity-10'}`} />
+                                            </div>
+                                            {isActive && <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-slate-900" />}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-12 bg-blue-400/20 blur-lg rounded-full pointer-events-none" />
             </div>
 
-            {/* Wave */}
-            <div className="relative mt-16">
-                <svg viewBox="0 0 1440 80" className="w-full" preserveAspectRatio="none" style={{ height: 60 }}>
-                    <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f8fafc" />
-                </svg>
-            </div>
-        </section>
+
+        </main>
+    );
+}
+
+export default function App() {
+    return (
+        <MouseTracker>
+            <Navbar />
+            <Hero />
+        </MouseTracker>
     );
 }

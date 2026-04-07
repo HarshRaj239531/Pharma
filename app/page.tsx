@@ -7,11 +7,12 @@ import Pricing from "@/src/components/sections/Pricing";
 import CTA from "@/src/components/sections/CTA";
 import { Navbar } from "@/src/components/Layout/Navbar";
 import Footer from "@/src/components/Layout/Footer";
+import Topbar from "@/src/components/Layout/Topbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen font-sans">
-      <Navbar />
+
       <main>
         <Hero />
         <Stats />
