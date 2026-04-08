@@ -20,9 +20,9 @@ import {
 // --- God-Tier Spatial Interaction Hook (3D Tilt + Prismatic Glow + Reveal) ---
 const useSpatialInteraction = () => {
     const [state, setState] = useState({ x: 0, y: 0, rotateX: 0, rotateY: 0, isHovered: false });
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent) => {
         if (!ref.current) return;
         const rect = ref.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -45,7 +45,7 @@ const useSpatialInteraction = () => {
 };
 
 // --- Hyper-Advanced Spatial Bento Card ---
-const SpatialCard = ({ children, className, containerClassName, delay = 0 }) => {
+const SpatialCard = ({ children, className = "", containerClassName = "", delay = 0 }: { children: React.ReactNode; className?: string; containerClassName?: string; delay?: number }) => {
     const { ref, x, y, rotateX, rotateY, isHovered, handleMouseMove, handleMouseLeave } = useSpatialInteraction();
     const [isVisible, setIsVisible] = useState(false);
 
@@ -339,12 +339,6 @@ export default function Features() {
                                             zIndex: 4 - i,
                                             transform: `translateX(${i * 18}px)`, // Default overlap
                                         }}
-                                        // CSS hack to trigger orbital spread on parent hover
-                                        css={`
-                                            .group:hover & {
-                                                transform: translateX(${i * 12 + 10}px) translateY(${color.trans}) rotate(${color.rot});
-                                            }
-                                        `}
                                     >
                                         <div className={`w-4 h-4 rounded-full ${color.text} shadow-sm`} />
                                     </div>

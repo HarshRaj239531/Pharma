@@ -61,11 +61,11 @@ export default function Footer() {
                             You&apos;re subscribed!
                         </div>
                     ) : (
-                        <form onSubmit={e => { e.preventDefault(); if (email) setDone(true); }} className="flex gap-2 w-full md:w-auto">
+                        <form onSubmit={(e: React.FormEvent) => { e.preventDefault(); if (email) setDone(true); }} className="flex gap-2 w-full md:w-auto">
                             <input
                                 type="email"
                                 value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                                 placeholder="your@email.com"
                                 required
                                 className="flex-1 md:w-56 px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder:text-gray-500 text-sm focus:outline-none focus:border-blue-500 transition-colors"
