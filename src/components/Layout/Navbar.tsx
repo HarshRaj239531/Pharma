@@ -9,13 +9,13 @@ import {
 import Link from "next/link";
 
 // --- Custom Spotlight Card Component ---
-function SpotlightCard({ children, className = "" }) {
-    const divRef = useRef(null);
+function SpotlightCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+    const divRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [opacity, setOpacity] = useState(0);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!divRef.current || isFocused) return;
         const div = divRef.current;
         const rect = div.getBoundingClientRect();
@@ -50,11 +50,11 @@ function SpotlightCard({ children, className = "" }) {
 }
 
 // --- Magnetic Interaction Wrapper ---
-function Magnetic({ children, strength = 20, active = true }) {
-    const ref = useRef(null);
+function Magnetic({ children, strength = 20, active = true }: { children: React.ReactElement; strength?: number; active?: boolean }) {
+    const ref = useRef<HTMLElement>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
-    const handleMouse = (e) => {
+    const handleMouse = (e: React.MouseEvent) => {
         if (!active || !ref.current) return;
         const { clientX, clientY } = e;
         const { height, width, left, top } = ref.current.getBoundingClientRect();
@@ -65,12 +65,12 @@ function Magnetic({ children, strength = 20, active = true }) {
 
     const reset = () => setPosition({ x: 0, y: 0 });
 
-    return React.cloneElement(children, {
+    return React.cloneElement(children as React.ReactElement<any>, {
         ref,
         onMouseMove: handleMouse,
         onMouseLeave: reset,
         style: {
-            ...children.props.style,
+            ...(children as any).props?.style,
             transform: `translate(${position.x}px, ${position.y}px)`,
             transition: "transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)",
             willChange: "transform"
@@ -100,7 +100,7 @@ const menuData = {
         items: [
             { title: "Blogs", desc: "Start building fast", icon: <BookOpen />, link: "/resources/blogs" },
             { title: "Help Center", desc: "Endpoints & SDKs", icon: <Terminal />, link: "/resources/help_center" },
-            { title: "Community", desc: "Connect your stack", icon: <Boxes />, link: "#" },
+            { title: "Community", desc: "Connect your stack", icon: <Boxes />, link: "/resources/community" },
             { title: "Videos", desc: "Learn with video tutorials", icon: <Video />, link: "/resources/videos" }
         ]
     }
@@ -111,16 +111,16 @@ const navLinks = ['Features', 'Solutions', 'Resources', 'Support', 'Schedule Fre
 // --- Navbar Component ---
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
-    const [activeMenu, setActiveMenu] = useState(null);
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const [hoverBox, setHoverBox] = useState({ opacity: 0, left: 0, width: 0 });
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const navRef = useRef(null);
-    const menuTimer = useRef(null);
+    const navRef = useRef<HTMLDivElement>(null);
+    const menuTimer = useRef<NodeJS.Timeout | null>(null);
 
     // Scroll Handler
     useEffect(() => {
-        let frameId;
+        let frameId: number | null = null;
         const handleScroll = () => {
             if (frameId) return;
             frameId = requestAnimationFrame(() => {
@@ -144,8 +144,8 @@ export function Navbar() {
     }, []);
 
     // Hover Tracking using offsetLeft for 100% accuracy (Fixes "age piche" issue)
-    const handleNavEnter = (e, menuName) => {
-        clearTimeout(menuTimer.current);
+    const handleNavEnter = (e: React.MouseEvent<HTMLElement>, menuName: string) => {
+        if (menuTimer.current) clearTimeout(menuTimer.current);
         const target = e.currentTarget;
 
         setHoverBox({
@@ -154,7 +154,7 @@ export function Navbar() {
             width: target.offsetWidth,
         });
 
-        if (menuName && menuData[menuName]) {
+        if (menuName && (menuData as any)[menuName]) {
             setActiveMenu(menuName);
         } else {
             setActiveMenu(null);
@@ -169,7 +169,7 @@ export function Navbar() {
     };
 
     const handleDropdownEnter = () => {
-        clearTimeout(menuTimer.current);
+        if (menuTimer.current) clearTimeout(menuTimer.current);
     };
 
     return (
@@ -199,7 +199,7 @@ export function Navbar() {
                     {/* Logo Area */}
                     <div className="flex items-center z-20 shrink-0">
                         <Magnetic strength={15}>
-                            <a href="#" className="flex items-center gap-2 group p-2 rounded-xl transition-all hover:bg-slate-100/50">
+                            <Link href="/" className="flex items-center gap-2 group p-2 rounded-xl transition-all hover:bg-slate-100/50">
                                 <div className={`relative flex items-center justify-center bg-slate-950 text-white rounded-[10px] transition-[width,height,transform] duration-500 overflow-hidden shadow-md group-hover:shadow-indigo-500/30 group-hover:-translate-y-0.5 group-hover:rotate-[-2deg] ${scrolled ? 'w-8 h-8' : 'w-10 h-10'}`}>
                                     <Layers className={`relative z-10 transition-transform duration-500 group-hover:scale-110 ${scrolled ? 'w-4 h-4' : 'w-5 h-5'}`} />
                                     <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/40 to-purple-500/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -207,7 +207,7 @@ export function Navbar() {
                                 <span className={`font-bold tracking-tight text-slate-950 transition-[font-size] duration-500 ${scrolled ? 'text-base' : 'text-xl'}`}>
                                     Stratum<span className="text-indigo-500">.</span>
                                 </span>
-                            </a>
+                            </Link>
                         </Magnetic>
                     </div>
 
@@ -230,7 +230,10 @@ export function Navbar() {
                         />
 
                         {/* Link Items */}
-                        <div className="flex items-center gap-1 z-10 relative h-full">
+                        <div
+                            ref={navRef as React.RefObject<HTMLDivElement>}
+                            className="flex items-center gap-1 z-10 relative h-full"
+                        >
                             {navLinks.map((item) => (
                                 <div
                                     key={item}
@@ -240,7 +243,7 @@ export function Navbar() {
                                     <span className={`font-medium transition-colors duration-200 ${activeMenu === item ? 'text-slate-950' : 'text-slate-600 hover:text-slate-950'} text-[15px]`}>
                                         {item === 'Schedule Free Demo' && scrolled ? 'Demo' : item}
                                     </span>
-                                    {menuData[item] && (
+                                    {(menuData as any)[item] && (
                                         <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${activeMenu === item ? 'rotate-180 text-slate-900' : ''}`} />
                                     )}
                                 </div>
@@ -308,7 +311,7 @@ export function Navbar() {
                                                         <div>
                                                             <div className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
                                                                 {sub.title}
-                                                                {sub.badge && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100/80 text-emerald-700 ring-1 ring-emerald-200">{sub.badge}</span>}
+                                                                {(sub as any).badge && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100/80 text-emerald-700 ring-1 ring-emerald-200">{(sub as any).badge}</span>}
                                                             </div>
                                                             <div className="text-xs text-slate-500 mt-1 font-medium">{sub.desc}</div>
                                                         </div>

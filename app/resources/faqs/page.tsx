@@ -170,7 +170,7 @@ export default function App() {
     const [activeCategory, setActiveCategory] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
 
-    const searchInputRef = useRef(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const filteredFaqs = useMemo(() => {
         return faqData.filter((faq) => {

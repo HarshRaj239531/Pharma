@@ -48,13 +48,13 @@ const backendVideos = [
 
 // --- ⚡ ULTRA-PREMIUM AMBIENT BACKGROUND ---
 function PremiumBackground() {
-    const auraRef = useRef(null);
+    const auraRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
 
-        const onMouseMove = (e: { clientX: number; clientY: number; }) => {
+        const onMouseMove = (e: MouseEvent) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             if (auraRef.current) {
@@ -103,8 +103,8 @@ export default function App() {
     const [activeVideo, setActiveVideo] = useState(backendVideos[0]);
 
     // Video Player States
-    const videoRef = useRef(null);
-    const progressBarRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const progressBarRef = useRef<HTMLDivElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [showControls, setShowControls] = useState(true);
@@ -112,7 +112,7 @@ export default function App() {
     const [currentTimeStr, setCurrentTimeStr] = useState("0:00");
     const [durationStr, setDurationStr] = useState(activeVideo.duration);
 
-    const hideControlsTimeout = useRef(null);
+    const hideControlsTimeout = useRef<NodeJS.Timeout | null>(null);
 
     // Handle video source change
     useEffect(() => {
@@ -141,7 +141,7 @@ export default function App() {
     };
 
     // Seek Functionality (Clickable Progress Bar)
-    const handleSeek = (e: { stopPropagation: () => void; clientX: number; }) => {
+    const handleSeek = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (!progressBarRef.current || !videoRef.current) return;
 
@@ -176,7 +176,7 @@ export default function App() {
 
     const handleMouseMove = () => {
         setShowControls(true);
-        clearTimeout(hideControlsTimeout.current);
+        if (hideControlsTimeout.current) clearTimeout(hideControlsTimeout.current);
         if (isPlaying) {
             hideControlsTimeout.current = setTimeout(() => {
                 setShowControls(false);

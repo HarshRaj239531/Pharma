@@ -80,13 +80,13 @@ const categories = ["All", "Business", "Design", "Development", "Marketing", "Te
 
 // --- ⚡ ADVANCED AMBIENT BACKGROUND ---
 function PremiumBackground() {
-    const auraRef = useRef(null);
+    const auraRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
 
-        const onMouseMove = (e) => {
+        const onMouseMove = (e: MouseEvent) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
             if (auraRef.current) {
@@ -126,10 +126,10 @@ function PremiumBackground() {
 }
 
 // --- ⚡ MOUSE SPOTLIGHT CARD WRAPPER ---
-function SpotlightCard({ children, className = "" }) {
-    const divRef = useRef(null);
+function SpotlightCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+    const divRef = useRef<HTMLDivElement>(null);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!divRef.current) return;
         const rect = divRef.current.getBoundingClientRect();
         divRef.current.style.setProperty("--mx", `${e.clientX - rect.left}px`);
@@ -140,8 +140,8 @@ function SpotlightCard({ children, className = "" }) {
         <div
             ref={divRef}
             onMouseMove={handleMouseMove}
-            onMouseEnter={() => divRef.current.style.setProperty("--mo", "1")}
-            onMouseLeave={() => divRef.current.style.setProperty("--mo", "0")}
+            onMouseEnter={() => divRef.current?.style.setProperty("--mo", "1")}
+            onMouseLeave={() => divRef.current?.style.setProperty("--mo", "0")}
             className={`relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${className}`}
         >
             <div
